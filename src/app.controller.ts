@@ -30,7 +30,7 @@ export class AppController {
         const resp = await this.appService.deleteNameProyecto(correo,name)
         return resp;
       } else {
-        console.error('Falta INFO.');
+        console.error('Falta INFO1.');
       }
     }
   
