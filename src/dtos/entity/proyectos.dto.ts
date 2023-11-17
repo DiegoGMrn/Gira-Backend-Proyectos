@@ -12,6 +12,6 @@ export class Proyecto {
     @Column()
     correoCreador: string;
 
-    @Column()
+    @Column({ nullable: true })
     idEquipo: number;
 }

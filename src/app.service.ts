@@ -45,12 +45,12 @@ export class AppService {
     return false;
   }
 
-  async showInfoProyecto(correoT: string): Promise<{ id: number,nombre: string; correo: string }[] | null> {
+  async showInfoProyecto(correoT: string): Promise<{ id: number,nombre: string; correo: string, idEquipo: number }[] | null> {
     const correoCreador = correoT;
     const proyecto = await this.proyectoRepository.find({ where: { correoCreador } });
   
     if (proyecto) {
-      return proyecto.map((proyecto) => ({ id: proyecto.id,nombre: proyecto.name, correo: proyecto.correoCreador, }));
+      return proyecto.map((proyecto) => ({ id: proyecto.id,nombre: proyecto.name, correo: proyecto.correoCreador, idEquipo: proyecto.idEquipo}));
     }
   
     return null; 
@@ -74,4 +74,7 @@ export class AppService {
     return false
       }
   
+
 }
+
+
