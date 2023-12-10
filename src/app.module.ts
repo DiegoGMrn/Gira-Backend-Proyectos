@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt'; // Asegúrate de importar JwtModule
 
 import { Proyecto } from './dtos/entity/proyectos.dto';
+import { EquiposProyectos } from './dtos/entity/equiposProyectos.dto';
 
 
 
@@ -36,7 +37,7 @@ import { Proyecto } from './dtos/entity/proyectos.dto';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Proyecto]),
+    TypeOrmModule.forFeature([Proyecto,EquiposProyectos]),
     JwtModule.register({
       secret: 'tu_clave_secreta', // Remplaza con tu clave secreta real
       signOptions: { expiresIn: '1h' }, // Opciones de firma del token

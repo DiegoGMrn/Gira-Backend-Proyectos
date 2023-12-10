@@ -3,17 +3,19 @@ import { ClientProxy } from '@nestjs/microservices'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateProyectoDto } from './dtos/create-proyecto-dto';
+//import { CreateProyectoDto } from './dtos/create-proyecto-dto';
 import { JwtService } from '@nestjs/jwt';
 
 import * as nodemailer from 'nodemailer';
 import { Proyecto } from './dtos/entity/proyectos.dto';
+import { EquiposProyectos } from './dtos/entity/equiposProyectos.dto';
 
 
 @Injectable()
 export class AppService {
   constructor(@Inject('PROYECTO_SERVICE') private client: ClientProxy,
-  @InjectRepository(Proyecto) private readonly proyectoRepository: Repository<Proyecto>,private readonly jwtService: JwtService,){}
+  @InjectRepository(Proyecto) private readonly proyectoRepository: Repository<Proyecto>,private readonly jwtService: JwtService,
+  @InjectRepository(EquiposProyectos) private readonly equipoProyectoRepository: Repository<EquiposProyectos>){}
   
   
   async createProyecto(nombre: string,correo: string): Promise<boolean> {
@@ -45,12 +47,12 @@ export class AppService {
     return false;
   }
 
-  async showInfoProyecto(correoT: string): Promise<{ id: number,nombre: string; correo: string, idEquipo: number }[] | null> {
+  async showInfoProyecto(correoT: string): Promise<{ id: number,nombre: string; correo: string}[] | null> {
     const correoCreador = correoT;
     const proyecto = await this.proyectoRepository.find({ where: { correoCreador } });
   
     if (proyecto) {
-      return proyecto.map((proyecto) => ({ id: proyecto.id,nombre: proyecto.name, correo: proyecto.correoCreador, idEquipo: proyecto.idEquipo}));
+      return proyecto.map((proyecto) => ({ id: proyecto.id,nombre: proyecto.name, correo: proyecto.correoCreador}));
     }
   
     return null; 
@@ -60,19 +62,21 @@ export class AppService {
   async agregarEquipo(idProyecto: number, idEquipo: number, correoT: string): Promise<boolean> {
     const idDelProyecto = idProyecto;
     const idDelEquipo = idEquipo;
-    const correoCreador = correoT;
-
-    const proyectoBuscado = await this.proyectoRepository.findOne({where:{id:idDelProyecto}})
-    if(proyectoBuscado){
-      proyectoBuscado.idEquipo = idDelEquipo;
-      await this.proyectoRepository.save(proyectoBuscado)
-      return true
-    }
     
 
+    const proyectoBuscado = await this.proyectoRepository.findOne({ where: { id: idDelProyecto } });
+    const nuevoEquipoProyecto = new EquiposProyectos();
+    nuevoEquipoProyecto.idProyecto=idDelProyecto;
+    nuevoEquipoProyecto.idEquipo=idDelEquipo;
+    
+    const guardado=await this.equipoProyectoRepository.save(nuevoEquipoProyecto);
+    
+    if (guardado) {
+        return true;
+    }
 
-    return false
-      }
+    return false;
+}
   
 
 }
