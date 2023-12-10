@@ -59,6 +59,19 @@ export class AppController {
         console.error('Falta INFO.');
       }
     }
+
+
+    @EventPattern('delete_name_equipo')
+    async handleDeleteNameEquipo(data: { idP: number,idE: number, correo: string }) {
+      const { idP, idE , correo } = data;
+      
+      if (idP && idE) {
+        const resp = await this.appService.deleteNameEquipo(idP,idE,correo)
+        return resp;
+      } else {
+        console.error('Falta INFO.');
+      }
+    }
   
 }
 

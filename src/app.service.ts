@@ -77,6 +77,24 @@ export class AppService {
 
     return false;
 }
+
+async deleteNameEquipo(idP:number,idE:number,correo:string): Promise<boolean> {
+  const idProyecto = idP;
+  const idEquipo = idE;
+  const correoCreador = correo;
+  
+  const equipo = await this.equipoProyectoRepository.findOne({ where: { idProyecto,idEquipo } });
+  const proyecto = await this.proyectoRepository.findOne({ where: { id:idProyecto} })
+  const correoCreadorProyecto = proyecto.correoCreador
+  if(equipo && correoCreadorProyecto == correo){
+    await this.equipoProyectoRepository.remove(equipo);
+    
+    return true;
+  }
+  
+
+  return false;
+}
   
 
 }
