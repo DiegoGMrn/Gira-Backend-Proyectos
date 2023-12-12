@@ -68,10 +68,10 @@ export class AppService {
     const nuevoEquipoProyecto = new EquiposProyectos();
     nuevoEquipoProyecto.idProyecto=idDelProyecto;
     nuevoEquipoProyecto.idEquipo=idDelEquipo;
-    
+    nuevoEquipoProyecto.proyecto = proyectoBuscado;
     const guardado=await this.equipoProyectoRepository.save(nuevoEquipoProyecto);
     
-    if (guardado) {
+    if (proyectoBuscado && guardado) {
         return true;
     }
 
